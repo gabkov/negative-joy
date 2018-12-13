@@ -2,26 +2,17 @@ package com.gabor.negtivejoy;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.content.Context;
-import android.graphics.Canvas;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v7.widget.AppCompatImageView;
-import android.text.Layout;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.Random;
 
@@ -31,25 +22,17 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Sensor accelerometer;
     private long lastUpdate;
 
-    private Bitmap bottlecap;
-    private Bitmap bottlecapDown;
-
-    AnimatedView animatedView = null;
-
     private float xmax, ymax;
 
-    private final int IMAGE_SIZE = 700;
+    private final int IMAGE_SIZE = 780;
 
     private float x = 200;
     private float y;
 
-    private Bitmap toView;
-
     private boolean topIsVisible = true;
 
     ImageView bottleCapImageView;
-
-    private TextPaint mTextPaint=new TextPaint();
+    TextView bottleTextView;
 
     Random rand = new Random();
 
@@ -64,14 +47,10 @@ public class MainActivity extends Activity implements SensorEventListener {
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         lastUpdate = System.currentTimeMillis();
 
-        animatedView = new AnimatedView(this);
-
-        animatedView.findViewById(R.id.bottelcap_image);
-
         setContentView(R.layout.activity_main);
 
         bottleCapImageView = findViewById(R.id.bottelcap_image);
-        System.out.println(bottleCapImageView);
+        bottleTextView = findViewById(R.id.textForCap);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -79,14 +58,18 @@ public class MainActivity extends Activity implements SensorEventListener {
         xmax = size.x - IMAGE_SIZE;
         ymax = size.y - IMAGE_SIZE;
 
-        animatedView.setOnClickListener(new View.OnClickListener() {
+        bottleCapImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(topIsVisible){
                     topIsVisible = false;
+                    bottleCapImageView.setImageResource(R.drawable.craftdown);
                     bottleText = getRandomtext();
+                    bottleTextView.setVisibility(v.VISIBLE);
                 } else {
                     topIsVisible = true;
+                    bottleCapImageView.setImageResource(R.drawable.bottlecap);
+                    bottleTextView.setVisibility(v.INVISIBLE);
                 }
             }
         });
@@ -105,11 +88,9 @@ public class MainActivity extends Activity implements SensorEventListener {
         sensorManager.unregisterListener(this);
     }
 
-
     @Override
     public void onAccuracyChanged(Sensor arg0, int arg1) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -131,47 +112,11 @@ public class MainActivity extends Activity implements SensorEventListener {
                 y = 0;
             }
 
-        }
-    }
+            bottleCapImageView.setX(x);
+            bottleCapImageView.setY(y);
 
-    public class AnimatedView extends AppCompatImageView {
-
-        public AnimatedView(Context context) {
-            super(context);
-            // TODO Auto-generated constructor stub
-
-            Bitmap cup = BitmapFactory.decodeResource(getResources(), R.drawable.bottlecap);
-            Bitmap cupDown = BitmapFactory.decodeResource(getResources(), R.drawable.craftdown);
-            final int dstWidth = IMAGE_SIZE;
-            final int dstHeight = IMAGE_SIZE;
-            bottlecap = Bitmap.createScaledBitmap(cup, dstWidth, dstHeight, true);
-            bottlecapDown = Bitmap.createScaledBitmap(cupDown, dstWidth, dstHeight, true);
-        }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-
-            if (topIsVisible){
-                toView = bottlecap;
-                canvas.drawBitmap(toView, x, y, null);
-            }else {
-                toView = bottlecapDown;
-                canvas.drawBitmap(toView, x, y, null);
-
-                mTextPaint.setColor(Color.WHITE);
-                mTextPaint.setTextSize(100);
-                StaticLayout mTextLayout = new StaticLayout(bottleText, mTextPaint, canvas.getWidth(), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-                canvas.save();
-
-                int textNewLines = bottleText.split("\n").length;
-
-                canvas.translate(x+200, y+200);
-
-                mTextLayout.draw(canvas);
-                canvas.restore();
-            }
-
-            invalidate();
+            bottleTextView.setX(x);
+            bottleTextView.setY(y);
         }
     }
 
