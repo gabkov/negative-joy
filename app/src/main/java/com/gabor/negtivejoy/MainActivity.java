@@ -3,6 +3,7 @@ package com.gabor.negtivejoy;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,14 +11,17 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.text.TextPaint;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Random;
 
 
-public class MainActivity extends Activity implements SensorEventListener {
+public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener {
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private long lastUpdate;
@@ -37,6 +41,15 @@ public class MainActivity extends Activity implements SensorEventListener {
     Random rand = new Random();
 
     private String bottleText;
+
+    private ViewGroup mRrootLayout;
+    private int _xDelta;
+    private int _yDelta;
+
+    private boolean inMotion;
+
+    private float xCord;
+    private float yCord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +71,70 @@ public class MainActivity extends Activity implements SensorEventListener {
         xmax = size.x - IMAGE_SIZE;
         ymax = size.y - IMAGE_SIZE;
 
-        bottleCapImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(topIsVisible){
-                    topIsVisible = false;
-                    bottleCapImageView.setImageResource(R.drawable.craftdown);
-                    bottleText = getRandomtext();
-                    bottleTextView.setVisibility(v.VISIBLE);
-                } else {
-                    topIsVisible = true;
-                    bottleCapImageView.setImageResource(R.drawable.bottlecap);
-                    bottleTextView.setVisibility(v.INVISIBLE);
+        mRrootLayout = (ViewGroup) findViewById(R.id.root);
+
+        bottleCapImageView.setOnTouchListener(this);
+
+    }
+
+
+    public boolean onTouch(View view, MotionEvent event) {
+        final int X = (int) event.getRawX();
+        final int Y = (int) event.getRawY();
+
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                inMotion = true;
+                RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                _xDelta = X - lParams.leftMargin;
+                _yDelta = Y - lParams.topMargin;
+                xCord = view.getX();
+                yCord = view.getY();
+
+                break;
+            case MotionEvent.ACTION_UP:
+                x = view.getX();
+                y = view.getY();
+
+                if(Math.abs(xCord - x) < 10 && Math.abs(yCord - y) < 10){
+                    doFlip(view);
                 }
-            }
-        });
+                inMotion = false;
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                inMotion = true;
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view
+                        .getLayoutParams();
+                layoutParams.leftMargin = X - _xDelta;
+                layoutParams.topMargin = Y - _yDelta;
+                layoutParams.rightMargin = -250;
+                layoutParams.bottomMargin = -250;
+                view.setLayoutParams(layoutParams);
+                break;
+        }
+        mRrootLayout.invalidate();
+        return true;
+    }
+
+    private void doFlip(View view){
+        if(topIsVisible){
+            topIsVisible = false;
+
+            bottleCapImageView.setImageResource(R.drawable.craftdown);
+
+            bottleText = getRandomtext();
+
+            bottleTextView.setVisibility(view.VISIBLE);
+            bottleTextView.setText(bottleText);
+        } else {
+            topIsVisible = true;
+            bottleCapImageView.setImageResource(R.drawable.bottlecap);
+            bottleTextView.setVisibility(view.INVISIBLE);
+        }
     }
 
     @Override
@@ -96,7 +158,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         // TODO Auto-generated method stub
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && !inMotion) {
 
             x -= event.values[0] * 2;
             y += event.values[1] * 2;
@@ -121,7 +183,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     private String getRandomtext(){
-        String[] texts = {"LOOL EZ\nVICCES", "TE BÉNA", "NANA\nANA\nNA"};
+        String[] texts = {"You're adopted!", "LOOSER", "Suck a duck", "Works with long\n sentences as well", "DAMN"};
         String result = texts[rand.nextInt(texts.length)];
         return result;
     }
