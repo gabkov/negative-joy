@@ -27,19 +27,20 @@
     android:layout_centerVertical="true"
     android:scaleType="centerCrop" />
 
-<TextView
-    android:id="@+id/textForCap"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/textForCap"
-    android:visibility="invisible"
-    android:layout_alignLeft="@+id/bottlecup_down"
-    android:layout_alignRight="@+id/bottlecup_down"
-    android:layout_alignTop="@id/bottlecup_down"
-    android:layout_alignBottom="@id/bottlecup_down"
-    android:layout_centerVertical="true"
-    android:textAppearance="?android:attr/textAppearanceLarge"
-    android:gravity="center"
-    android:textColor="#ffffff"/>
+    <TextView
+        android:id="@+id/textForCap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bottlecup_down"
+        android:layout_alignTop="@id/bottlecup_down"
+        android:layout_alignRight="@+id/bottlecup_down"
+        android:layout_alignBottom="@id/bottlecup_down"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="@string/textForCap"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff"
+        android:textSize="26sp"
+        android:visibility="invisible" />
 
 </RelativeLayout>

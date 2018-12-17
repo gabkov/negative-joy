@@ -1,15 +1,12 @@
 package com.gabor.negtivejoy;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.text.TextPaint;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,95 +21,84 @@ import java.util.Random;
 public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener {
     private SensorManager sensorManager;
     private Sensor accelerometer;
-    private long lastUpdate;
-
-    private float xmax, ymax;
 
     private final int IMAGE_SIZE = 780;
+    private final int TILT_NITRO = 2;
 
     private float x = 200;
     private float y;
+    private float xMax, yMax;
+    private int xDelta;
+    private int yDelta;
+    private float dragStartXCoordinate;
+    private float dragStartYCoordinate;
+
+    private ImageView bottleCapImageView;
+    private TextView bottleTextView;
+    private ViewGroup mRrootLayout;
 
     private boolean topIsVisible = true;
-
-    ImageView bottleCapImageView;
-    TextView bottleTextView;
-
-    Random rand = new Random();
-
-    private String bottleText;
-
-    private ViewGroup mRrootLayout;
-    private int _xDelta;
-    private int _yDelta;
-
     private boolean inMotion;
 
-    private float xCord;
-    private float yCord;
+    private Random rand = new Random();
+
+    private String bottleText;
+    private final String[] texts = {"You're adopted!", "LOOSER", "Suck a duck",
+            "Works with long\n sentences as well", "DAMN",
+            "HA HA HA\nNO", "iOS...\nLOL", "BUS SNAKE"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        accelerometer = sensorManager
-                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        lastUpdate = System.currentTimeMillis();
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         setContentView(R.layout.activity_main);
 
         bottleCapImageView = findViewById(R.id.bottelcap_image);
         bottleTextView = findViewById(R.id.textForCap);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        xmax = size.x - IMAGE_SIZE;
-        ymax = size.y - IMAGE_SIZE;
+        setScreenSizeMax();
 
-        mRrootLayout = (ViewGroup) findViewById(R.id.root);
+        mRrootLayout = findViewById(R.id.root);
 
         bottleCapImageView.setOnTouchListener(this);
-
     }
-
 
     public boolean onTouch(View view, MotionEvent event) {
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
 
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 inMotion = true;
-                RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                _xDelta = X - lParams.leftMargin;
-                _yDelta = Y - lParams.topMargin;
-                xCord = view.getX();
-                yCord = view.getY();
+
+                xDelta = X - layoutParams.leftMargin;
+                yDelta = Y - layoutParams.topMargin;
+                dragStartXCoordinate = view.getX();
+                dragStartYCoordinate = view.getY();
 
                 break;
             case MotionEvent.ACTION_UP:
                 x = view.getX();
                 y = view.getY();
 
-                if(Math.abs(xCord - x) < 10 && Math.abs(yCord - y) < 10){
-                    doFlip(view);
+                if(Math.abs(dragStartXCoordinate - x) < 10 && Math.abs(dragStartYCoordinate - y) < 10){
+                    doFlip();
                 }
                 inMotion = false;
                 break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                break;
             case MotionEvent.ACTION_MOVE:
                 inMotion = true;
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view
-                        .getLayoutParams();
-                layoutParams.leftMargin = X - _xDelta;
-                layoutParams.topMargin = Y - _yDelta;
+                layoutParams.leftMargin = X - xDelta;
+                layoutParams.topMargin = Y - yDelta;
                 layoutParams.rightMargin = -250;
                 layoutParams.bottomMargin = -250;
+                bottleTextView.setX(view.getX());
+                bottleTextView.setY(view.getY());
                 view.setLayoutParams(layoutParams);
                 break;
         }
@@ -120,21 +106,31 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         return true;
     }
 
-    private void doFlip(View view){
+    private void setScreenSizeMax(){
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        xMax = size.x - IMAGE_SIZE;
+        yMax = size.y - IMAGE_SIZE;
+    }
+
+    private void doFlip(){
         if(topIsVisible){
             topIsVisible = false;
-
             bottleCapImageView.setImageResource(R.drawable.craftdown);
-
-            bottleText = getRandomtext();
-
-            bottleTextView.setVisibility(view.VISIBLE);
+            bottleText = getRandomText();
+            bottleTextView.setVisibility(View.VISIBLE);
             bottleTextView.setText(bottleText);
         } else {
             topIsVisible = true;
             bottleCapImageView.setImageResource(R.drawable.bottlecap);
-            bottleTextView.setVisibility(view.INVISIBLE);
+            bottleTextView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private String getRandomText(){
+        String result = texts[rand.nextInt(texts.length)];
+        return result;
     }
 
     @Override
@@ -160,16 +156,16 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         // TODO Auto-generated method stub
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && !inMotion) {
 
-            x -= event.values[0] * 2;
-            y += event.values[1] * 2;
+            x -= event.values[0] * TILT_NITRO;
+            y += event.values[1] * TILT_NITRO;
 
-            if (x > xmax) {
-                x = xmax;
+            if (x > xMax) {
+                x = xMax;
             } else if (x < 0) {
                 x = 0;
             }
-            if (y > ymax) {
-                y = ymax;
+            if (y > yMax) {
+                y = yMax;
             } else if (y < 0) {
                 y = 0;
             }
@@ -181,11 +177,4 @@ public class MainActivity extends Activity implements SensorEventListener, View.
             bottleTextView.setY(y);
         }
     }
-
-    private String getRandomtext(){
-        String[] texts = {"You're adopted!", "LOOSER", "Suck a duck", "Works with long\n sentences as well", "DAMN"};
-        String result = texts[rand.nextInt(texts.length)];
-        return result;
-    }
-
 }
