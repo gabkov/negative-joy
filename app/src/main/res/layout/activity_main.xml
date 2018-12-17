@@ -7,25 +7,36 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-<ImageView
-    android:id="@+id/bottelcap_image"
-    android:layout_width="300dp"
-    android:layout_height="300dp"
-    android:src="@drawable/bottlecap"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/bottelcap_image"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/bottlecap"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-<ImageView
-    android:id="@+id/bottlecup_down"
-    android:layout_width="300dp"
-    android:layout_height="300dp"
-    android:src="@drawable/craftdown"
-    android:visibility="invisible"
-    android:layout_centerHorizontal="true"
-    android:layout_centerVertical="true"
-    android:scaleType="centerCrop" />
+    <ImageView
+        android:id="@+id/bottlecap_dragged"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/bottlecapdragged"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/bottlecup_down"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/craftdown"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/textForCap"
@@ -40,7 +51,8 @@
         android:text="@string/textForCap"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#ffffff"
-        android:textSize="26sp"
+        android:textSize="24sp"
         android:visibility="invisible" />
+
 
 </RelativeLayout>

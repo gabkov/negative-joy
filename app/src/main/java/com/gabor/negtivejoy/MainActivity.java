@@ -10,9 +10,7 @@ import android.hardware.SensorManager;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Random;
@@ -22,7 +20,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     private SensorManager sensorManager;
     private Sensor accelerometer;
 
-    private final int IMAGE_SIZE = 780;
+    private final int IMAGE_SIZE = 655;
     private final int TILT_NITRO = 2;
 
     private float x = 200;
@@ -34,7 +32,6 @@ public class MainActivity extends Activity implements SensorEventListener, View.
 
     private ImageView bottleCapImageView;
     private TextView bottleTextView;
-    private ViewGroup mRrootLayout;
 
     private boolean topIsVisible = true;
     private boolean inMotion;
@@ -45,8 +42,6 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     private final String[] texts = {"You're adopted!", "LOOSER", "Suck a duck",
             "Works with long\n sentences as well", "DAMN",
             "HA HA HA\nNO", "iOS...\nLOL", "BUS SNAKE"};
-
-
 
 
     @Override
@@ -63,8 +58,6 @@ public class MainActivity extends Activity implements SensorEventListener, View.
 
         setScreenSizeMax();
 
-        mRrootLayout = findViewById(R.id.root);
-
         bottleCapImageView.setOnTouchListener(this);
     }
 
@@ -73,19 +66,19 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 inMotion = true;
-
                 dX = view.getX() - event.getRawX();
                 dY = view.getY() - event.getRawY();
-
                 dragStartXCoordinate = view.getX();
                 dragStartYCoordinate = view.getY();
                 break;
             case MotionEvent.ACTION_UP:
                 x = view.getX();
                 y = view.getY();
-
-                if(Math.abs(dragStartXCoordinate - x) < 10 && Math.abs(dragStartYCoordinate - y) < 10){
+                if (Math.abs(dragStartXCoordinate - x) < 10 && Math.abs(dragStartYCoordinate - y) < 10) {
                     doFlip();
+                }
+                if (topIsVisible) {
+                    bottleCapImageView.setImageResource(R.drawable.bottlecap);
                 }
                 inMotion = false;
                 break;
@@ -94,14 +87,14 @@ public class MainActivity extends Activity implements SensorEventListener, View.
                 float xAnimate = event.getRawX() + dX;
                 float yAnimate = event.getRawY() + dY;
 
-                if(xAnimate > xMax) {
+                if (xAnimate > xMax) {
                     xAnimate = xMax;
-                }else if(xAnimate < 0){
+                } else if (xAnimate < 0) {
                     xAnimate = 0;
                 }
-                if(yAnimate > yMax){
+                if (yAnimate > yMax) {
                     yAnimate = yMax;
-                }else if (yAnimate < 0){
+                } else if (yAnimate < 0) {
                     yAnimate = 0;
                 }
 
@@ -111,6 +104,10 @@ public class MainActivity extends Activity implements SensorEventListener, View.
                 view.animate().start();
                 bottleTextView.setX(view.getX());
                 bottleTextView.setY(view.getY());
+
+                if (topIsVisible && Math.abs(dragStartXCoordinate - view.getX()) > 10 && Math.abs(dragStartYCoordinate - view.getY()) > 10) {
+                    bottleCapImageView.setImageResource(R.drawable.bottlecapdragged);
+                }
                 break;
         }
         return true;
