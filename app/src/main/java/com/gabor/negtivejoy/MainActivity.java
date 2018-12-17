@@ -28,8 +28,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     private float x = 200;
     private float y;
     private float xMax, yMax;
-    private int xDelta;
-    private int yDelta;
+    private float dX, dY;
     private float dragStartXCoordinate;
     private float dragStartYCoordinate;
 
@@ -47,7 +46,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
             "Works with long\n sentences as well", "DAMN",
             "HA HA HA\nNO", "iOS...\nLOL", "BUS SNAKE"};
 
-    float dX, dY;
+
 
 
     @Override
@@ -77,6 +76,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
 
                 dX = view.getX() - event.getRawX();
                 dY = view.getY() - event.getRawY();
+
                 dragStartXCoordinate = view.getX();
                 dragStartYCoordinate = view.getY();
                 break;
@@ -91,12 +91,24 @@ public class MainActivity extends Activity implements SensorEventListener, View.
                 break;
             case MotionEvent.ACTION_MOVE:
                 inMotion = true;
+                float xAnimate = event.getRawX() + dX;
+                float yAnimate = event.getRawY() + dY;
 
-                view.animate()
-                        .x(event.getRawX() + dX)
-                        .y(event.getRawY() + dY)
-                        .setDuration(0)
-                        .start();
+                if(xAnimate > xMax) {
+                    xAnimate = xMax;
+                }else if(xAnimate < 0){
+                    xAnimate = 0;
+                }
+                if(yAnimate > yMax){
+                    yAnimate = yMax;
+                }else if (yAnimate < 0){
+                    yAnimate = 0;
+                }
+
+                view.animate().x(xAnimate);
+                view.animate().y(yAnimate);
+                view.animate().setDuration(0);
+                view.animate().start();
                 bottleTextView.setX(view.getX());
                 bottleTextView.setY(view.getY());
                 break;
