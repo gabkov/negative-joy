@@ -47,6 +47,8 @@ public class MainActivity extends Activity implements SensorEventListener, View.
             "Works with long\n sentences as well", "DAMN",
             "HA HA HA\nNO", "iOS...\nLOL", "BUS SNAKE"};
 
+    float dX, dY;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,19 +70,15 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     }
 
     public boolean onTouch(View view, MotionEvent event) {
-        final int X = (int) event.getRawX();
-        final int Y = (int) event.getRawY();
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
 
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 inMotion = true;
 
-                xDelta = X - layoutParams.leftMargin;
-                yDelta = Y - layoutParams.topMargin;
+                dX = view.getX() - event.getRawX();
+                dY = view.getY() - event.getRawY();
                 dragStartXCoordinate = view.getX();
                 dragStartYCoordinate = view.getY();
-
                 break;
             case MotionEvent.ACTION_UP:
                 x = view.getX();
@@ -93,20 +91,20 @@ public class MainActivity extends Activity implements SensorEventListener, View.
                 break;
             case MotionEvent.ACTION_MOVE:
                 inMotion = true;
-                layoutParams.leftMargin = X - xDelta;
-                layoutParams.topMargin = Y - yDelta;
-                layoutParams.rightMargin = -250;
-                layoutParams.bottomMargin = -250;
+
+                view.animate()
+                        .x(event.getRawX() + dX)
+                        .y(event.getRawY() + dY)
+                        .setDuration(0)
+                        .start();
                 bottleTextView.setX(view.getX());
                 bottleTextView.setY(view.getY());
-                view.setLayoutParams(layoutParams);
                 break;
         }
-        mRrootLayout.invalidate();
         return true;
     }
 
-    private void setScreenSizeMax(){
+    private void setScreenSizeMax() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -114,8 +112,8 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         yMax = size.y - IMAGE_SIZE;
     }
 
-    private void doFlip(){
-        if(topIsVisible){
+    private void doFlip() {
+        if (topIsVisible) {
             topIsVisible = false;
             bottleCapImageView.setImageResource(R.drawable.craftdown);
             bottleText = getRandomText();
@@ -128,7 +126,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         }
     }
 
-    private String getRandomText(){
+    private String getRandomText() {
         String result = texts[rand.nextInt(texts.length)];
         return result;
     }
