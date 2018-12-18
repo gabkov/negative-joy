@@ -9,15 +9,16 @@ import android.widget.TextView;
 import java.util.Random;
 
 public class Visuals {
-    private final String[] texts = {"You're adopted!", "LOOSER", "Suck a duck",
-            "Works with long\n sentences as well", "DAMN",
-            "HA HA HA\nNO", "iOS...\nLOL", "BUS SNAKE", "You smell like\ncrap",
-            "BITCOIN", "HODL"};
 
     private Random rand = new Random();
     private ImageView bottleCapImageView;
     private TextView bottleTextView;
     private String bottleText;
+
+    private final String[] texts = {"You're adopted!", "LOOSER", "Suck a duck",
+            "Works with long\n sentences as well", "DAMN",
+            "HA HA HA\nNO", "iOS...\nLOL", "BUS SNAKE", "You smell like\ncrap",
+            "BITCOIN", "HODL"};
 
     public Visuals(ImageView bottleCapImageView, TextView bottleTextView) {
         this.bottleCapImageView = bottleCapImageView;
@@ -31,6 +32,7 @@ public class Visuals {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void doFlip(BottleTopVisibility topVisibility) {
+
         boolean topIsVisible = topVisibility.getBottleTopVisibility();
 
         if (topIsVisible) {

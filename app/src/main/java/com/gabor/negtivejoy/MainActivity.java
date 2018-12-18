@@ -129,53 +129,6 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         }
     }
 
-    /*private String getRandomText() {
-        String result = texts[rand.nextInt(texts.length)];
-        return result;
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void doFlip() {
-        if (topIsVisible) {
-            topIsVisible = false;
-            flipAnimation(R.drawable.craftdown);
-            bottleText = getRandomText();
-            bottleTextView.setText(bottleText);
-        } else {
-            topIsVisible = true;
-            flipAnimation(R.drawable.bottlecap);
-            bottleTextView.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void flipAnimation(final Integer image) {
-        bottleCapImageView.animate().withLayer()
-                .rotationY(90)
-                .setDuration(200)
-                .withEndAction(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                // second quarter turn
-                                bottleCapImageView.setImageResource(image);
-                                bottleCapImageView.setRotationY(-90);
-                                bottleCapImageView.animate().withLayer()
-                                        .rotationY(0)
-                                        .setDuration(200)
-                                        .withEndAction(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (!topIsVisible) {
-                                                    bottleTextView.setVisibility(View.VISIBLE);
-                                                }
-                                            }
-                                        })
-                                        .start();
-                            }
-                        }
-                ).start();
-    }*/
 
     @Override
     public void onSensorChanged(SensorEvent event) {
