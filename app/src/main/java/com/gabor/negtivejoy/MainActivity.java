@@ -15,8 +15,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Random;
-
 
 public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener, BottleTopVisibility {
     private SensorManager sensorManager;
@@ -37,15 +35,6 @@ public class MainActivity extends Activity implements SensorEventListener, View.
 
     private boolean topIsVisible = true;
     private boolean inMotion;
-
-    private Random rand = new Random();
-
-    /*private String bottleText;
-    private final String[] texts = {"You're adopted!", "LOOSER", "Suck a duck",
-            "Works with long\n sentences as well", "DAMN",
-            "HA HA HA\nNO", "iOS...\nLOL", "BUS SNAKE", "You smell like crap",
-            "BITCOIN", "HODL"};*/
-
 
     private Visuals visuals;
 
@@ -124,7 +113,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     }
 
     private void changeSmileIfNeeded(View view, Integer drawableId) {
-        if (topIsVisible && Math.abs(dragStartXCoordinate - view.getX()) > 5 && Math.abs(dragStartYCoordinate - view.getY()) > 5) {
+        if (topIsVisible && (Math.abs(dragStartXCoordinate - view.getX()) > 10 || Math.abs(dragStartYCoordinate - view.getY()) > 10)) {
             bottleCapImageView.setImageResource(drawableId);
         }
     }

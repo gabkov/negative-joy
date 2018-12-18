@@ -33,16 +33,16 @@ public class Visuals {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void doFlip(BottleTopVisibility topVisibility) {
 
-        boolean topIsVisible = topVisibility.getBottleTopVisibility();
+        boolean bottleTopVisibility = topVisibility.getBottleTopVisibility();
 
-        if (topIsVisible) {
+        if (bottleTopVisibility) {
             topVisibility.changeBottleTopVisibility();
-            flipAnimation(R.drawable.craftdown, topIsVisible);
+            flipAnimation(R.drawable.craftdown, bottleTopVisibility);
             bottleText = getRandomText();
             bottleTextView.setText(bottleText);
         } else {
             topVisibility.changeBottleTopVisibility();
-            flipAnimation(R.drawable.bottlecap, topIsVisible);
+            flipAnimation(R.drawable.bottlecap, bottleTopVisibility);
             bottleTextView.setVisibility(View.INVISIBLE);
         }
     }
@@ -51,7 +51,7 @@ public class Visuals {
     private void flipAnimation(final Integer image, final boolean topNotVisible) {
         bottleCapImageView.animate().withLayer()
                 .rotationY(90)
-                .setDuration(200)
+                .setDuration(150)
                 .withEndAction(
                         new Runnable() {
                             @Override
@@ -61,7 +61,7 @@ public class Visuals {
                                 bottleCapImageView.setRotationY(-90);
                                 bottleCapImageView.animate().withLayer()
                                         .rotationY(0)
-                                        .setDuration(200)
+                                        .setDuration(150)
                                         .withEndAction(new Runnable() {
                                             @Override
                                             public void run() {
