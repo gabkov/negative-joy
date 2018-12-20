@@ -15,8 +15,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import android.content.*;
+import android.graphics.*;
+import android.widget.*;
+import android.provider.*;
 
-public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener, BottleTopVisibility {
+
+
+public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener {
     private SensorManager sensorManager;
     private Sensor accelerometer;
 
@@ -34,9 +40,15 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     private TextView bottleTextView;
 
     private boolean topIsVisible = true;
-    private boolean inMotion;
+    //private boolean inMotion;
+
+    private BottleCup bottleCup;
 
     private Visuals visuals;
+
+    private EmotionHandler emotionHandler;
+
+    private final int PICK_IMAGE = 1;
 
 
     @Override
@@ -47,15 +59,43 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         setContentView(R.layout.activity_main);
+        setScreenSizeMax();
+
 
         bottleCapImageView = findViewById(R.id.bottelcap_image);
         bottleTextView = findViewById(R.id.textForCap);
 
-        setScreenSizeMax();
+        bottleCup = new BottleCup(bottleCapImageView, bottleTextView);
 
-        visuals = new Visuals(bottleCapImageView, bottleTextView);
+        visuals = new Visuals(bottleCup);
+        emotionHandler = new EmotionHandler(bottleCapImageView);
 
         bottleCapImageView.setOnTouchListener(this);
+
+        Button button1 = findViewById(R.id.button1);
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, PICK_IMAGE);
+                }
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
+
+            Bundle extras = data.getExtras();
+            Bitmap bitmap = (Bitmap) extras.get("data");
+
+            emotionHandler.detectAndFrame(bitmap);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -63,7 +103,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
 
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                inMotion = true;
+                bottleCup.setInMotionToTrue();
                 dX = view.getX() - event.getRawX();
                 dY = view.getY() - event.getRawY();
                 dragStartXCoordinate = view.getX();
@@ -73,13 +113,13 @@ public class MainActivity extends Activity implements SensorEventListener, View.
                 x = view.getX();
                 y = view.getY();
                 if (Math.abs(dragStartXCoordinate - x) < 10 && Math.abs(dragStartYCoordinate - y) < 10) {
-                    visuals.doFlip(this);
+                    visuals.doFlip();
                 }
                 changeSmileIfNeeded(view, R.drawable.bottlecap);
-                inMotion = false;
+                bottleCup.setInMotionToFalse();
                 break;
             case MotionEvent.ACTION_MOVE:
-                inMotion = true;
+                bottleCup.setInMotionToTrue();
                 float xAnimate = event.getRawX() + dX;
                 float yAnimate = event.getRawY() + dY;
 
@@ -96,8 +136,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
                 view.animate().x(xAnimate);
                 view.animate().y(yAnimate);
                 view.animate().setDuration(0).start();
-                bottleTextView.setX(view.getX());
-                bottleTextView.setY(view.getY());
+                bottleCup.changeBottleTextPosition(view.getX(), view.getY());
                 changeSmileIfNeeded(view, R.drawable.bottlecapdragged);
                 break;
         }
@@ -113,16 +152,15 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     }
 
     private void changeSmileIfNeeded(View view, Integer drawableId) {
-        if (topIsVisible && (Math.abs(dragStartXCoordinate - view.getX()) > 10 || Math.abs(dragStartYCoordinate - view.getY()) > 10)) {
-            bottleCapImageView.setImageResource(drawableId);
+        if (bottleCup.getBottleTopVisibility() && (Math.abs(dragStartXCoordinate - view.getX()) > 10 || Math.abs(dragStartYCoordinate - view.getY()) > 10)) {
+            bottleCup.changeBottleCupImage(drawableId);
         }
     }
-
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         // TODO Auto-generated method stub
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && !inMotion) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && !bottleCup.isInMotion()) {
 
             x -= event.values[0] * TILT_NITRO;
             y += event.values[1] * TILT_NITRO;
@@ -138,11 +176,8 @@ public class MainActivity extends Activity implements SensorEventListener, View.
                 y = 0;
             }
 
-            bottleCapImageView.setX(x);
-            bottleCapImageView.setY(y);
-
-            bottleTextView.setX(x);
-            bottleTextView.setY(y);
+            bottleCup.changeBottleCupPosition(x, y);
+            bottleCup.changeBottleTextPosition(x, y);
         }
     }
 
@@ -164,17 +199,4 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         // TODO Auto-generated method stub
     }
 
-    @Override
-    public void changeBottleTopVisibility() {
-        if (topIsVisible){
-            topIsVisible = false;
-        } else {
-            topIsVisible = true;
-        }
-    }
-
-    @Override
-    public boolean getBottleTopVisibility() {
-        return topIsVisible;
-    }
 }

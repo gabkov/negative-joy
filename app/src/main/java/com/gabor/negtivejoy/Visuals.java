@@ -14,15 +14,18 @@ public class Visuals {
     private ImageView bottleCapImageView;
     private TextView bottleTextView;
     private String bottleText;
+    private BottleCup bottleCup;
 
     private final String[] texts = {"You're adopted!", "LOOSER", "Suck a duck",
             "Works with long\n sentences as well", "DAMN",
             "HA HA HA\nNO", "iOS...\nLOL", "BUS SNAKE", "You smell like\ncrap",
             "BITCOIN", "HODL"};
 
-    public Visuals(ImageView bottleCapImageView, TextView bottleTextView) {
-        this.bottleCapImageView = bottleCapImageView;
-        this.bottleTextView = bottleTextView;
+
+    public Visuals(BottleCup bottleCup) {
+        this.bottleCup = bottleCup;
+        this.bottleCapImageView = bottleCup.getBottleCapImageView();
+        this.bottleTextView = bottleCup.getBottleTextView();
     }
 
     private String getRandomText() {
@@ -31,17 +34,17 @@ public class Visuals {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void doFlip(BottleTopVisibility topVisibility) {
+    public void doFlip() {
 
-        boolean bottleTopVisibility = topVisibility.getBottleTopVisibility();
+        boolean bottleTopVisibility = bottleCup.getBottleTopVisibility();
 
         if (bottleTopVisibility) {
-            topVisibility.changeBottleTopVisibility();
+            bottleCup.changeBottleTopVisibility();
             flipAnimation(R.drawable.craftdown, bottleTopVisibility);
             bottleText = getRandomText();
             bottleTextView.setText(bottleText);
         } else {
-            topVisibility.changeBottleTopVisibility();
+            bottleCup.changeBottleTopVisibility();
             flipAnimation(R.drawable.bottlecap, bottleTopVisibility);
             bottleTextView.setVisibility(View.INVISIBLE);
         }
@@ -56,21 +59,21 @@ public class Visuals {
                         new Runnable() {
                             @Override
                             public void run() {
-                                // second quarter turn
-                                bottleCapImageView.setImageResource(image);
-                                bottleCapImageView.setRotationY(-90);
-                                bottleCapImageView.animate().withLayer()
-                                        .rotationY(0)
-                                        .setDuration(150)
-                                        .withEndAction(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (topNotVisible) {
-                                                    bottleTextView.setVisibility(View.VISIBLE);
-                                                }
+                            // second quarter turn
+                            bottleCapImageView.setImageResource(image);
+                            bottleCapImageView.setRotationY(-90);
+                            bottleCapImageView.animate().withLayer()
+                                    .rotationY(0)
+                                    .setDuration(150)
+                                    .withEndAction(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (topNotVisible) {
+                                                bottleTextView.setVisibility(View.VISIBLE);
                                             }
-                                        })
-                                        .start();
+                                        }
+                                    })
+                                    .start();
                             }
                         }
                 ).start();
