@@ -22,7 +22,7 @@ public class EmotionHandler {
 
     private ImageView bottleCapImageView;
 
-    EmotionHandler(ImageView bottleCapImageView){
+    EmotionHandler(ImageView bottleCapImageView) {
         this.bottleCapImageView = bottleCapImageView;
     }
 
@@ -73,7 +73,7 @@ public class EmotionHandler {
                         if (result == null) return;
 
 
-                        drawFaceRectanglesOnBitmap(result);
+                        detectEmotion(result);
                         imageBitmap.recycle();
                     }
                 };
@@ -85,16 +85,14 @@ public class EmotionHandler {
         System.out.println("ERROR: " + message);
     }
 
-    private void drawFaceRectanglesOnBitmap(Face[] faces) {
+    private void detectEmotion(Face[] faces) {
         if (faces != null) {
             for (Face face : faces) {
                 Emotion faceAttribute = face.faceAttributes.emotion;
-                System.out.println("Happinnes" + faceAttribute.happiness);
-                if(Math.round(faceAttribute.happiness) >= 1){
+                if (Math.round(faceAttribute.happiness) >= 1) {
                     bottleCapImageView.setImageResource(R.drawable.emotionhappy);
                     System.out.println("Happinnes" + faceAttribute.happiness);
                 }
-
             }
         }
     }

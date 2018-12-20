@@ -21,7 +21,6 @@ import android.widget.*;
 import android.provider.*;
 
 
-
 public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener {
     private SensorManager sensorManager;
     private Sensor accelerometer;
@@ -86,6 +85,14 @@ public class MainActivity extends Activity implements SensorEventListener, View.
 
     }
 
+    private void setScreenSizeMax() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        xMax = size.x - IMAGE_SIZE;
+        yMax = size.y - IMAGE_SIZE;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -115,7 +122,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
                 if (Math.abs(dragStartXCoordinate - x) < 10 && Math.abs(dragStartYCoordinate - y) < 10) {
                     visuals.doFlip();
                 }
-                changeSmileIfNeeded(view, R.drawable.bottlecap);
+                visuals.changeSmileIfNeeded(view, R.drawable.bottlecap, dragStartXCoordinate, dragStartYCoordinate);
                 bottleCup.setInMotionToFalse();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -136,25 +143,13 @@ public class MainActivity extends Activity implements SensorEventListener, View.
                 view.animate().x(xAnimate);
                 view.animate().y(yAnimate);
                 view.animate().setDuration(0).start();
+
                 bottleCup.changeBottleTextPosition(view.getX(), view.getY());
-                changeSmileIfNeeded(view, R.drawable.bottlecapdragged);
+
+                visuals.changeSmileIfNeeded(view, R.drawable.bottlecapdragged, dragStartXCoordinate, dragStartYCoordinate);
                 break;
         }
         return true;
-    }
-
-    private void setScreenSizeMax() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        xMax = size.x - IMAGE_SIZE;
-        yMax = size.y - IMAGE_SIZE;
-    }
-
-    private void changeSmileIfNeeded(View view, Integer drawableId) {
-        if (bottleCup.getBottleTopVisibility() && (Math.abs(dragStartXCoordinate - view.getX()) > 10 || Math.abs(dragStartYCoordinate - view.getY()) > 10)) {
-            bottleCup.changeBottleCupImage(drawableId);
-        }
     }
 
     @Override

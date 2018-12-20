@@ -33,6 +33,12 @@ public class Visuals {
         return result;
     }
 
+    public void changeSmileIfNeeded(View view, Integer drawableId, float dragStartXCoordinate, float dragStartYCoordinate) {
+        if (bottleCup.getBottleTopVisibility() && (Math.abs(dragStartXCoordinate - view.getX()) > 10 || Math.abs(dragStartYCoordinate - view.getY()) > 10)) {
+            bottleCup.changeBottleCupImage(drawableId);
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void doFlip() {
 
@@ -59,21 +65,21 @@ public class Visuals {
                         new Runnable() {
                             @Override
                             public void run() {
-                            // second quarter turn
-                            bottleCapImageView.setImageResource(image);
-                            bottleCapImageView.setRotationY(-90);
-                            bottleCapImageView.animate().withLayer()
-                                    .rotationY(0)
-                                    .setDuration(150)
-                                    .withEndAction(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (topNotVisible) {
-                                                bottleTextView.setVisibility(View.VISIBLE);
+                                // second quarter turn
+                                bottleCapImageView.setImageResource(image);
+                                bottleCapImageView.setRotationY(-90);
+                                bottleCapImageView.animate().withLayer()
+                                        .rotationY(0)
+                                        .setDuration(150)
+                                        .withEndAction(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (topNotVisible) {
+                                                    bottleTextView.setVisibility(View.VISIBLE);
+                                                }
                                             }
-                                        }
-                                    })
-                                    .start();
+                                        })
+                                        .start();
                             }
                         }
                 ).start();
