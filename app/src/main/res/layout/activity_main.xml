@@ -59,13 +59,13 @@
         style="@style/Widget.AppCompat.Button.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="18dp"
-        android:text="Button" />
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginRight="17dp"
+        android:text="@string/button_text" />
 
 
     <ImageView
@@ -79,5 +79,74 @@
         android:src="@drawable/emotionhappy"
         android:visibility="invisible" />
 
+    <ImageView
+        android:id="@+id/angry_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/angryemotion"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/disgust_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/disgustemotion"
+        android:visibility="invisible" />
+
+
+    <ImageView
+        android:id="@+id/fear_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/fearemotion"
+        android:visibility="invisible" />
+
+
+    <ImageView
+        android:id="@+id/sad_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/sademotion"
+        android:visibility="invisible" />
+
+
+    <ImageView
+        android:id="@+id/surprise_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/surpriseemotion"
+        android:visibility="invisible" />
+
+
+    <ImageView
+        android:id="@+id/neutral_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/neutralemotion"
+        android:visibility="invisible" />
 
 </RelativeLayout>

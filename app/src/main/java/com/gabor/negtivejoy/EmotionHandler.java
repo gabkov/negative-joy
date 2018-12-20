@@ -1,5 +1,6 @@
 package com.gabor.negtivejoy;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
@@ -21,9 +22,11 @@ public class EmotionHandler {
     private final FaceServiceClient faceServiceClient = new FaceServiceRestClient(apiEndpoint, subscriptionKey);
 
     private ImageView bottleCapImageView;
+    private Toaster toaster;
 
-    EmotionHandler(ImageView bottleCapImageView) {
+    EmotionHandler(ImageView bottleCapImageView, Toaster toaster) {
         this.bottleCapImageView = bottleCapImageView;
+        this.toaster = toaster;
     }
 
 
@@ -91,7 +94,28 @@ public class EmotionHandler {
                 Emotion faceAttribute = face.faceAttributes.emotion;
                 if (Math.round(faceAttribute.happiness) >= 1) {
                     bottleCapImageView.setImageResource(R.drawable.emotionhappy);
-                    System.out.println("Happinnes" + faceAttribute.happiness);
+                    System.out.println("Happiness: " + faceAttribute.happiness);
+                    toaster.displayToast("Happiness");
+                } else if (Math.round(faceAttribute.anger) >= 1) {
+                    bottleCapImageView.setImageResource(R.drawable.angryemotion);
+                    toaster.displayToast("Anger");
+                } else if (Math.round(faceAttribute.fear) >= 1) {
+                    bottleCapImageView.setImageResource(R.drawable.fearemotion);
+                    toaster.displayToast("Fear");
+                } else if (Math.round(faceAttribute.sadness) >= 1) {
+                    bottleCapImageView.setImageResource(R.drawable.sademotion);
+                    toaster.displayToast("Sadness");
+                } else if (Math.round(faceAttribute.surprise) >= 1) {
+                    bottleCapImageView.setImageResource(R.drawable.surpriseemotion);
+                    toaster.displayToast("Surprise");
+                } else if (Math.round(faceAttribute.disgust) >= 1) {
+                    bottleCapImageView.setImageResource(R.drawable.disgustemotion);
+                    toaster.displayToast("Disgust");
+                } else if (Math.round(faceAttribute.neutral) >= 1) {
+                    toaster.displayToast("Neutral");
+                    bottleCapImageView.setImageResource(R.drawable.neutralemotion);
+                } else {
+                    toaster.displayToast("No emotion detected");
                 }
             }
         }

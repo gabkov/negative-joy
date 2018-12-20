@@ -21,7 +21,7 @@ import android.widget.*;
 import android.provider.*;
 
 
-public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener {
+public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener, Toaster {
     private SensorManager sensorManager;
     private Sensor accelerometer;
 
@@ -35,16 +35,8 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     private float dragStartXCoordinate;
     private float dragStartYCoordinate;
 
-    private ImageView bottleCapImageView;
-    private TextView bottleTextView;
-
-    private boolean topIsVisible = true;
-    //private boolean inMotion;
-
     private BottleCup bottleCup;
-
     private Visuals visuals;
-
     private EmotionHandler emotionHandler;
 
     private final int PICK_IMAGE = 1;
@@ -61,13 +53,13 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         setScreenSizeMax();
 
 
-        bottleCapImageView = findViewById(R.id.bottelcap_image);
-        bottleTextView = findViewById(R.id.textForCap);
+        ImageView bottleCapImageView = findViewById(R.id.bottelcap_image);
+        TextView bottleTextView = findViewById(R.id.textForCap);
 
         bottleCup = new BottleCup(bottleCapImageView, bottleTextView);
 
         visuals = new Visuals(bottleCup);
-        emotionHandler = new EmotionHandler(bottleCapImageView);
+        emotionHandler = new EmotionHandler(bottleCapImageView, this);
 
         bottleCapImageView.setOnTouchListener(this);
 
@@ -192,6 +184,12 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     @Override
     public void onAccuracyChanged(Sensor arg0, int arg1) {
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void displayToast(String message){
+        Toast.makeText(getBaseContext(), message,
+                Toast.LENGTH_LONG).show();
     }
 
 }

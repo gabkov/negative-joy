@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NegtiveJoy</string>
     <string name="textForCap">Message</string>
+    <string name="button_text">Emotion detection</string>
 </resources>
