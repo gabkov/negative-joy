@@ -74,7 +74,6 @@ public class EmotionHandler {
                     protected void onPreExecute() {
                         //TODO: show progress dialog
                         detectionProgressDialogHandler.showDetectionDialog();
-                        detectionProgressDialogHandler.setDetectionDialogText("Detecting...");
                     }
 
                     @Override

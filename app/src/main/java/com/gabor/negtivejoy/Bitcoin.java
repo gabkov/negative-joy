@@ -1,8 +1,5 @@
 package com.gabor.negtivejoy;
 
-import android.app.ProgressDialog;
-import android.widget.ImageView;
-
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -15,41 +12,54 @@ import okhttp3.Response;
 
 public class Bitcoin {
 
-    public static final String BPI_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
+    private static final String BPI_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
     private OkHttpClient okHttpClient = new OkHttpClient();
-    private ProgressDialog progressDialog;
-    private ImageView bitcoin;
+    private BottleCup bottleCup;
+    private Toaster toaster;
+    private NotificationSender notificationSender;
+    private BitcoinProgressDialog bitcoinProgressDialog;
 
-    private void load() {
+    Bitcoin(BottleCup bottleCup, Toaster toaster, NotificationSender notificationSender, BitcoinProgressDialog bitcoinProgressDialog) {
+        this.bottleCup = bottleCup;
+        this.toaster = toaster;
+        this.notificationSender = notificationSender;
+        this.bitcoinProgressDialog = bitcoinProgressDialog;
+    }
+
+    public void load() {
         Request request = new Request.Builder()
                 .url(BPI_ENDPOINT)
                 .build();
 
-        progressDialog.show();
+        bitcoinProgressDialog.showBitcoinProgressDialog();
 
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                /*Toast.makeText(MainActivity.this, "Error during BPI loading : "
-                        + e.getMessage(), Toast.LENGTH_SHORT).show();*/
-                displayToast("Error during BPI loading : ");
+                toaster.displayToast("Error during BPI loading : ");
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String body = response.body().string();
 
+                bitcoinProgressDialog.dismissBitcoinProgressDialog();
+                String price = parseBpiResponse(body);
+                notificationSender.sendNotification(price);
+                bottleCup.setBottleTextInvisible();
+                bottleCup.changeBottleCupImage(R.drawable.btc);
+
                 //runOnUiThread(new Runnable() {
                 //  @Override
                 //public void run() {
-                progressDialog.dismiss();
-                String price = parseBpiResponse(body);
-                sendNotification(price);
-                bottleCup.setBottleTextInvisible();
-                bottleCup.changeBottleCupImage(R.drawable.btc);
+                //bitcoinProgressDialog.dismiss();
+                //String price = parseBpiResponse(body);
+                //sendNotification(price);
+                //bottleCup.setBottleTextInvisible();
+                //bottleCup.changeBottleCupImage(R.drawable.btc);
+                //}
+                //});
             }
-            //});
-            //}
         });
 
     }
@@ -62,7 +72,7 @@ public class Bitcoin {
 
             JSONObject bpiObject = jsonObject.getJSONObject("bpi");
             JSONObject usdObject = bpiObject.getJSONObject("USD");
-            builder.append(usdObject.getString("rate").substring(0, usdObject.getString("rate").length()-2)).append(" $").append("\n");
+            builder.append(usdObject.getString("rate").substring(0, usdObject.getString("rate").length() - 2)).append(" $").append("\n");
 
             return builder.toString();
 
