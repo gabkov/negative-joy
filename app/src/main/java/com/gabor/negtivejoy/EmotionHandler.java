@@ -11,6 +11,8 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.gabor.negtivejoy.Interfaces.DetectionProgressDialogHandler;
+import com.gabor.negtivejoy.Interfaces.Toaster;
 import com.microsoft.projectoxford.face.*;
 import com.microsoft.projectoxford.face.contract.*;
 

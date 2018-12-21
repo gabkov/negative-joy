@@ -2,8 +2,6 @@ package com.gabor.negtivejoy;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.graphics.Point;
 import android.os.Build;
@@ -12,7 +10,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v4.app.NotificationCompat;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -25,9 +22,12 @@ import android.graphics.*;
 import android.widget.*;
 import android.provider.*;
 
+import com.gabor.negtivejoy.Interfaces.BitcoinProgressDialog;
+import com.gabor.negtivejoy.Interfaces.DetectionProgressDialogHandler;
+import com.gabor.negtivejoy.Interfaces.Toaster;
 
 
-public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener, Toaster, DetectionProgressDialogHandler, BitcoinProgressDialog, NotificationSender {
+public class MainActivity extends Activity implements SensorEventListener, View.OnTouchListener, Toaster, DetectionProgressDialogHandler, BitcoinProgressDialog {
     private SensorManager sensorManager;
     private Sensor accelerometer;
 
@@ -45,17 +45,13 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     private Visuals visuals;
     private EmotionHandler emotionHandler;
     private Bitcoin bitcoin;
-
+    private NotificationHandler notificationHandler;
 
     private final int PICK_IMAGE = 1;
 
     private ProgressDialog detectionProgressDialog;
     private ProgressDialog bitcoinProgressDialog;
     private ImageView bitcoinImage;
-
-    private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
-    private NotificationManager mNotifyManager;
-    private static final int NOTIFICATION_ID = 0;
 
 
     @Override
@@ -72,9 +68,10 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         TextView bottleTextView = findViewById(R.id.textForCap);
 
         bottleCup = new BottleCup(bottleCapImageView, bottleTextView);
-        bitcoin = new Bitcoin(bottleCup, this, this, this);
         visuals = new Visuals(bottleCup);
         emotionHandler = new EmotionHandler(bottleCapImageView, this, this);
+        notificationHandler = new NotificationHandler(this);
+        bitcoin = new Bitcoin(this, bottleCup, this, notificationHandler, this);
 
         detectionProgressDialog = new ProgressDialog(this);
         detectionProgressDialog.setMessage("Detecting...");
@@ -108,37 +105,8 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         });
 
         // Creates the notification channel for the app
-        createNotificationChannel();
+        notificationHandler.createNotificationChannel();
 
-    }
-
-    @Override
-    public void sendNotification(String price){
-        NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
-        notifyBuilder.setContentText(price);
-        mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
-    }
-
-    public void createNotificationChannel() {
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (android.os.Build.VERSION.SDK_INT >=
-                android.os.Build.VERSION_CODES.O) {
-            // Create a NotificationChannel
-            NotificationChannel notificationChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, "Mascot Notification", NotificationManager.IMPORTANCE_HIGH);
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.enableVibration(true);
-            notificationChannel.setDescription("Notification from Mascot");
-            mNotifyManager.createNotificationChannel(notificationChannel);
-        }
-    }
-
-    private NotificationCompat.Builder getNotificationBuilder(){
-        NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                .setContentTitle("Bitcoin price:")
-                .setContentText("This is your notification text.")
-                .setSmallIcon(R.drawable.ic_android);
-        return notifyBuilder;
     }
 
 

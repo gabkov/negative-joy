@@ -1,5 +1,11 @@
 package com.gabor.negtivejoy;
 
+import android.app.Activity;
+
+import com.gabor.negtivejoy.Interfaces.BitcoinProgressDialog;
+import com.gabor.negtivejoy.Interfaces.NotificationSender;
+import com.gabor.negtivejoy.Interfaces.Toaster;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -18,8 +24,10 @@ public class Bitcoin {
     private Toaster toaster;
     private NotificationSender notificationSender;
     private BitcoinProgressDialog bitcoinProgressDialog;
+    private Activity activity;
 
-    Bitcoin(BottleCup bottleCup, Toaster toaster, NotificationSender notificationSender, BitcoinProgressDialog bitcoinProgressDialog) {
+    Bitcoin(Activity activity, BottleCup bottleCup, Toaster toaster, NotificationSender notificationSender, BitcoinProgressDialog bitcoinProgressDialog) {
+        this.activity = activity;
         this.bottleCup = bottleCup;
         this.toaster = toaster;
         this.notificationSender = notificationSender;
@@ -43,25 +51,18 @@ public class Bitcoin {
             public void onResponse(Call call, Response response) throws IOException {
                 final String body = response.body().string();
 
-                bitcoinProgressDialog.dismissBitcoinProgressDialog();
-                String price = parseBpiResponse(body);
-                notificationSender.sendNotification(price);
-                bottleCup.setBottleTextInvisible();
-                bottleCup.changeBottleCupImage(R.drawable.btc);
-
-                //runOnUiThread(new Runnable() {
-                //  @Override
-                //public void run() {
-                //bitcoinProgressDialog.dismiss();
-                //String price = parseBpiResponse(body);
-                //sendNotification(price);
-                //bottleCup.setBottleTextInvisible();
-                //bottleCup.changeBottleCupImage(R.drawable.btc);
-                //}
-                //});
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bitcoinProgressDialog.dismissBitcoinProgressDialog();
+                        String price = parseBpiResponse(body);
+                        notificationSender.sendNotification(price);
+                        bottleCup.setBottleTextInvisible();
+                        bottleCup.changeBottleCupImage(R.drawable.btc);
+                    }
+                });
             }
         });
-
     }
 
     private String parseBpiResponse(String body) {

@@ -1,4 +1,4 @@
-package com.gabor.negtivejoy;
+package com.gabor.negtivejoy.Interfaces;
 
 public interface BitcoinProgressDialog {
     void showBitcoinProgressDialog();
