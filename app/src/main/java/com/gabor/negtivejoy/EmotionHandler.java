@@ -1,6 +1,5 @@
 package com.gabor.negtivejoy;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
@@ -8,6 +7,9 @@ import android.widget.ImageView;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.microsoft.projectoxford.face.*;
 import com.microsoft.projectoxford.face.contract.*;
@@ -23,10 +25,12 @@ public class EmotionHandler {
 
     private ImageView bottleCapImageView;
     private Toaster toaster;
+    private DetectionProgressDialogHandler detectionProgressDialogHandler;
 
-    EmotionHandler(ImageView bottleCapImageView, Toaster toaster) {
+    EmotionHandler(ImageView bottleCapImageView, Toaster toaster, DetectionProgressDialogHandler detectionProgressDialogHandler) {
         this.bottleCapImageView = bottleCapImageView;
         this.toaster = toaster;
+        this.detectionProgressDialogHandler = detectionProgressDialogHandler;
     }
 
 
@@ -67,8 +71,16 @@ public class EmotionHandler {
                     }
 
                     @Override
+                    protected void onPreExecute() {
+                        //TODO: show progress dialog
+                        detectionProgressDialogHandler.showDetectionDialog();
+                        detectionProgressDialogHandler.setDetectionDialogText("Detecting...");
+                    }
+
+                    @Override
                     protected void onPostExecute(Face[] result) {
                         //TODO: update face frames
+                        detectionProgressDialogHandler.dismissDetectionDialog();
 
                         if (!exceptionMessage.equals("")) {
                             showError(exceptionMessage);
@@ -89,35 +101,74 @@ public class EmotionHandler {
     }
 
     private void detectEmotion(Face[] faces) {
+        Map<Emotions, Double> emotionsMap = new HashMap<>();
+
         if (faces != null) {
             for (Face face : faces) {
                 Emotion faceAttribute = face.faceAttributes.emotion;
-                if (Math.round(faceAttribute.happiness) >= 1) {
-                    bottleCapImageView.setImageResource(R.drawable.emotionhappy);
-                    System.out.println("Happiness: " + faceAttribute.happiness);
-                    toaster.displayToast("Happiness");
-                } else if (Math.round(faceAttribute.anger) >= 1) {
-                    bottleCapImageView.setImageResource(R.drawable.angryemotion);
-                    toaster.displayToast("Anger");
-                } else if (Math.round(faceAttribute.fear) >= 1) {
-                    bottleCapImageView.setImageResource(R.drawable.fearemotion);
-                    toaster.displayToast("Fear");
-                } else if (Math.round(faceAttribute.sadness) >= 1) {
-                    bottleCapImageView.setImageResource(R.drawable.sademotion);
-                    toaster.displayToast("Sadness");
-                } else if (Math.round(faceAttribute.surprise) >= 1) {
-                    bottleCapImageView.setImageResource(R.drawable.surpriseemotion);
-                    toaster.displayToast("Surprise");
-                } else if (Math.round(faceAttribute.disgust) >= 1) {
-                    bottleCapImageView.setImageResource(R.drawable.disgustemotion);
-                    toaster.displayToast("Disgust");
-                } else if (Math.round(faceAttribute.neutral) >= 1) {
-                    toaster.displayToast("Neutral");
-                    bottleCapImageView.setImageResource(R.drawable.neutralemotion);
-                } else {
-                    toaster.displayToast("No emotion detected");
-                }
+                emotionsMap.put(Emotions.HAPPY, faceAttribute.happiness);
+                emotionsMap.put(Emotions.ANGRY, faceAttribute.anger);
+                emotionsMap.put(Emotions.FEAR, faceAttribute.fear);
+                emotionsMap.put(Emotions.SAD, faceAttribute.sadness);
+                emotionsMap.put(Emotions.SURPRISE, faceAttribute.surprise);
+                emotionsMap.put(Emotions.DISGUST, faceAttribute.disgust);
+                emotionsMap.put(Emotions.NEUTRAL, faceAttribute.neutral);
             }
         }
+        createEmotionFeedback(emotionsMap);
+    }
+
+    private void createEmotionFeedback(Map<Emotions, Double> emotionsDoubleMap){
+        DecimalFormat df = new DecimalFormat("#.##");
+
+        Map.Entry<Emotions, Double> maxEntry = null;
+
+        for (Map.Entry<Emotions, Double> entry : emotionsDoubleMap.entrySet()) {
+            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
+                maxEntry = entry;
+            }
+        }
+
+        Emotions emotion = maxEntry.getKey();
+
+        switch (emotion){
+            case HAPPY:
+                bottleCapImageView.setImageResource(R.drawable.emotionhappy);
+                toaster.displayToast("Happiness " + df.format(emotionsDoubleMap.get(emotion) * 100) + " %");
+                break;
+            case ANGRY:
+                bottleCapImageView.setImageResource(R.drawable.angryemotion);
+                toaster.displayToast("Anger " + df.format(emotionsDoubleMap.get(emotion) * 100) + " %");
+                break;
+            case FEAR:
+                bottleCapImageView.setImageResource(R.drawable.fearemotion);
+                toaster.displayToast("Fear " + df.format(emotionsDoubleMap.get(emotion) * 100) + " %");
+                break;
+            case SAD:
+                bottleCapImageView.setImageResource(R.drawable.sademotion);
+                toaster.displayToast("Sadness " + df.format(emotionsDoubleMap.get(emotion) * 100) + " %");
+                break;
+            case SURPRISE:
+                bottleCapImageView.setImageResource(R.drawable.surpriseemotion);
+                toaster.displayToast("Surprise " + df.format(emotionsDoubleMap.get(emotion) * 100) + " %");
+                break;
+            case DISGUST:
+                bottleCapImageView.setImageResource(R.drawable.disgustemotion);
+                toaster.displayToast("Disgust " + df.format(emotionsDoubleMap.get(emotion) * 100) + " %");
+                break;
+            case NEUTRAL:
+                toaster.displayToast("Neutral " + df.format(emotionsDoubleMap.get(emotion) * 100) + " %");
+                bottleCapImageView.setImageResource(R.drawable.neutralemotion);
+        }
+    }
+
+    private enum Emotions{
+        HAPPY,
+        ANGRY,
+        FEAR,
+        SAD,
+        SURPRISE,
+        DISGUST,
+        NEUTRAL,
     }
 }

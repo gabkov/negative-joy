@@ -1,5 +1,6 @@
 package com.gabor.negtivejoy;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,5 +61,9 @@ public class BottleCup {
 
     public boolean getBottleTopVisibility() {
         return topIsVisible;
+    }
+
+    public void setBottleTextInvisible(){
+        bottleTextView.setVisibility(View.INVISIBLE);
     }
 }
