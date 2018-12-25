@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import com.gabor.negtivejoy.Interfaces.NotificationSender;
 
 public class NotificationHandler implements NotificationSender {
+
     private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
     private NotificationManager mNotifyManager;
     private static final int NOTIFICATION_ID = 0;

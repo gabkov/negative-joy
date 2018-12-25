@@ -51,7 +51,6 @@ public class MainActivity extends Activity implements SensorEventListener, View.
 
     private ProgressDialog detectionProgressDialog;
     private ProgressDialog bitcoinProgressDialog;
-    private ImageView bitcoinImage;
 
 
     @Override
@@ -65,6 +64,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         setScreenSizeMax();
 
         ImageView bottleCapImageView = findViewById(R.id.bottelcap_image);
+        bottleCapImageView.setOnTouchListener(this);
         TextView bottleTextView = findViewById(R.id.textForCap);
 
         bottleCup = new BottleCup(bottleCapImageView, bottleTextView);
@@ -73,15 +73,18 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         notificationHandler = new NotificationHandler(this);
         bitcoin = new Bitcoin(this, bottleCup, this, notificationHandler, this);
 
+        // For emotion detection
         detectionProgressDialog = new ProgressDialog(this);
-        detectionProgressDialog.setMessage("Detecting...");
+        detectionProgressDialog.setMessage("Analysing...");
 
-        bottleCapImageView.setOnTouchListener(this);
+        // For the Bitcoin price
+        bitcoinProgressDialog = new ProgressDialog(this);
+        bitcoinProgressDialog.setTitle("BPI Loading");
+        bitcoinProgressDialog.setMessage("Wait ...");
 
         // For the image capture
-        Button button1 = findViewById(R.id.button1);
-
-        button1.setOnClickListener(new View.OnClickListener() {
+        Button emotionDetectionButton = findViewById(R.id.button1);
+        emotionDetectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -91,12 +94,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
             }
         });
 
-        // For the Bitcoin price
-        bitcoinProgressDialog = new ProgressDialog(this);
-        bitcoinProgressDialog.setTitle("BPI Loading");
-        bitcoinProgressDialog.setMessage("Wait ...");
-
-        bitcoinImage = (ImageView) findViewById(R.id.bitcoin);
+        ImageView bitcoinImage = (ImageView) findViewById(R.id.bitcoin);
         bitcoinImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +106,6 @@ public class MainActivity extends Activity implements SensorEventListener, View.
         notificationHandler.createNotificationChannel();
 
     }
-
 
     private void setScreenSizeMax() {
         Display display = getWindowManager().getDefaultDisplay();
