@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 public class BottleCup {
     private ImageView bottleCapImageView;
-
     private TextView bottleTextView;
 
     private boolean topIsVisible = true;
