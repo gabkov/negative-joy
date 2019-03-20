@@ -19,9 +19,9 @@ import com.microsoft.projectoxford.face.contract.*;
 
 public class EmotionHandler {
 
-    private final String apiEndpoint = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0";
+    private final String apiEndpoint = "https://westeurope.api.cognitive.microsoft.com/face/v1.0";
 
-    private final String subscriptionKey = "33d1cbd9cd954b5fb581254114fe5a8d";
+    private final String subscriptionKey = "8f9807ce916f497387c9ae1e371a007e";
 
     private final FaceServiceClient faceServiceClient = new FaceServiceRestClient(apiEndpoint, subscriptionKey);
 
