@@ -14,15 +14,18 @@ public class Visuals {
     private ImageView bottleCapImageView;
     private TextView bottleTextView;
     private String bottleText;
+    private BottleCup bottleCup;
 
     private final String[] texts = {"You're adopted!", "LOOSER", "Suck a duck",
             "Works with long\n sentences as well", "DAMN",
             "HA HA HA\nNO", "iOS...\nLOL", "BUS SNAKE", "You smell like\ncrap",
             "BITCOIN", "HODL"};
 
-    public Visuals(ImageView bottleCapImageView, TextView bottleTextView) {
-        this.bottleCapImageView = bottleCapImageView;
-        this.bottleTextView = bottleTextView;
+
+    public Visuals(BottleCup bottleCup) {
+        this.bottleCup = bottleCup;
+        this.bottleCapImageView = bottleCup.getBottleCapImageView();
+        this.bottleTextView = bottleCup.getBottleTextView();
     }
 
     private String getRandomText() {
@@ -30,18 +33,24 @@ public class Visuals {
         return result;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void doFlip(BottleTopVisibility topVisibility) {
+    public void changeSmileIfNeeded(View view, Integer drawableId, float dragStartXCoordinate, float dragStartYCoordinate) {
+        if (bottleCup.getBottleTopVisibility() && (Math.abs(dragStartXCoordinate - view.getX()) > 10 || Math.abs(dragStartYCoordinate - view.getY()) > 10)) {
+            bottleCup.changeBottleCupImage(drawableId);
+        }
+    }
 
-        boolean bottleTopVisibility = topVisibility.getBottleTopVisibility();
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void doFlip() {
+
+        boolean bottleTopVisibility = bottleCup.getBottleTopVisibility();
 
         if (bottleTopVisibility) {
-            topVisibility.changeBottleTopVisibility();
+            bottleCup.changeBottleTopVisibility();
             flipAnimation(R.drawable.craftdown, bottleTopVisibility);
             bottleText = getRandomText();
             bottleTextView.setText(bottleText);
         } else {
-            topVisibility.changeBottleTopVisibility();
+            bottleCup.changeBottleTopVisibility();
             flipAnimation(R.drawable.bottlecap, bottleTopVisibility);
             bottleTextView.setVisibility(View.INVISIBLE);
         }

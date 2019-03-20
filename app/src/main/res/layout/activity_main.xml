@@ -11,6 +11,8 @@
         android:id="@+id/bottelcap_image"
         android:layout_width="250dp"
         android:layout_height="250dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:src="@drawable/bottlecap"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,12 +23,14 @@
         android:id="@+id/bottlecap_dragged"
         android:layout_width="250dp"
         android:layout_height="250dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:src="@drawable/bottlecapdragged"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/bottlecup_down"
@@ -47,6 +51,10 @@
         android:layout_alignRight="@+id/bottlecup_down"
         android:layout_alignBottom="@id/bottlecup_down"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="67dp"
+        android:layout_marginTop="113dp"
+        android:layout_marginRight="-67dp"
+        android:layout_marginBottom="-113dp"
         android:gravity="center"
         android:text="@string/textForCap"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -54,5 +62,142 @@
         android:textSize="24sp"
         android:visibility="invisible" />
 
+    <Button
+        android:id="@+id/button1"
+        style="@style/Widget.AppCompat.Button.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginRight="17dp"
+        android:text="@string/button_text" />
+
+
+    <ImageView
+        android:id="@+id/happy_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/emotionhappy"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/angry_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/angryemotion"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/disgust_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/disgustemotion"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/fear_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="25dp"
+        android:src="@drawable/fearemotion"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/sad_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignStart="@+id/txt"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="22dp"
+        android:src="@drawable/sademotion"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/surprise_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignEnd="@+id/button1"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/surpriseemotion"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/neutral_emotion"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignEnd="@+id/button1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="62dp"
+        android:src="@drawable/neutralemotion"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/btc"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignEnd="@+id/button1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="62dp"
+        android:src="@drawable/btc"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/bitcoin"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/bitcoin" />
 
 </RelativeLayout>
