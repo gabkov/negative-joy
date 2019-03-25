@@ -31,7 +31,7 @@ public class MainActivity extends Activity implements SensorEventListener, View.
     private SensorManager sensorManager;
     private Sensor accelerometer;
 
-    private final int IMAGE_SIZE = 655;
+    private final int IMAGE_SIZE = 420;
     private final int TILT_NITRO = 2;
 
     private float x = 200;

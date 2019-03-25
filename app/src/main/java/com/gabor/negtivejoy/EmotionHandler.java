@@ -21,7 +21,7 @@ public class EmotionHandler {
 
     private final String apiEndpoint = "https://westeurope.api.cognitive.microsoft.com/face/v1.0";
 
-    private final String subscriptionKey = "8f9807ce916f497387c9ae1e371a007e";
+    private final String subscriptionKey = "";
 
     private final FaceServiceClient faceServiceClient = new FaceServiceRestClient(apiEndpoint, subscriptionKey);
 
