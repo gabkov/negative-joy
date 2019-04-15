@@ -1,5 +1,7 @@
 # negative-joy
 
+I made this app in 10 days with intention of practice and to get a little insight into Android development.
+
 Floating and draggable bottlecap with the famous meme Yoba and if you tap it, it flips and you got a funny message from him. 
 For the emotion detection I used Azure Cognitive Services.
 It can detect:
