@@ -15,4 +15,6 @@ It can detect:
 
 ![PicsArt_03-27-01 57 54](https://user-images.githubusercontent.com/38463744/55077610-7635d000-5098-11e9-8530-9793d2a22cf1.jpg)
 
-If you would like to use it you have to provide your own api keys. Cheers.
+If you would like to use it you have to provide your own api keys.
+https://azure.microsoft.com/en-us/services/cognitive-services/directory/
+Cheers.
