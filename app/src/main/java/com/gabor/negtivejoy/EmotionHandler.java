@@ -116,6 +116,7 @@ public class EmotionHandler {
                 emotionsMap.put(Emotions.NEUTRAL, faceAttribute.neutral);
             }
         }
+
         createEmotionFeedback(emotionsMap);
     }
 
@@ -130,7 +131,12 @@ public class EmotionHandler {
             }
         }
 
-        Emotions emotion = maxEntry.getKey();
+        Emotions emotion;
+        if(maxEntry == null){
+            emotion = Emotions.FAIL;
+        }else{
+            emotion = maxEntry.getKey();
+        }
 
         switch (emotion){
             case HAPPY:
@@ -160,6 +166,10 @@ public class EmotionHandler {
             case NEUTRAL:
                 toaster.displayToast("Neutral " + df.format(emotionsDoubleMap.get(emotion) * 100) + " %");
                 bottleCapImageView.setImageResource(R.drawable.neutralemotion);
+                break;
+            case FAIL:
+                toaster.displayToast("Please try again.");
+                break;
         }
     }
 
@@ -171,5 +181,6 @@ public class EmotionHandler {
         SURPRISE,
         DISGUST,
         NEUTRAL,
+        FAIL,
     }
 }
